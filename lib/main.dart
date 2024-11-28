@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:recipes_solid/features/online_recipes/data/repositories/fetch_repository_impl.dart';
+import 'package:recipes_solid/features/grocery_items_listing/data/datasources/grocery_local_data_source.dart';
+import 'package:recipes_solid/features/grocery_items_listing/data/models/grocery_model.dart';
+import 'package:recipes_solid/features/grocery_items_listing/domain/usecases/add_grocery_usecase.dart';
+import 'package:recipes_solid/features/grocery_items_listing/domain/usecases/delete_grocery_usecase.dart';
+import 'package:recipes_solid/features/grocery_items_listing/domain/usecases/get_grocery_usecase.dart';
+import 'package:recipes_solid/features/grocery_items_listing/domain/usecases/update_grocery_usecase.dart';
+import 'package:recipes_solid/features/grocery_items_listing/presentation/pages/grocery/grocery_screen.dart';
 import 'core/language_localization/localization.dart';
 import 'core/theme/theme.dart';
-import 'features/grocery_items_listing/presentation/pages/grocery/grocery_screen.dart';
+import 'features/online_recipes/data/repositories/fetch_repository_impl.dart';
 import 'features/online_recipes/data/datasources/fetch_recipe_data_source.dart';
 import 'features/online_recipes/domain/usecases/get_fetch_recipe_usecase.dart';
 import 'features/online_recipes/presentation/controller/fetch_recipe_controller.dart';
@@ -20,6 +26,8 @@ import 'features/own_recipes/presentation/pages/add_recipe_screen/add_recipe_scr
 import 'features/own_recipes/presentation/pages/bottomnavigation/bottomnavigation.dart';
 import 'features/own_recipes/presentation/pages/home_screen/home_screen.dart';
 import 'features/own_recipes/presentation/pages/splash_screen/splash_screen.dart';
+import 'features/grocery_items_listing/presentation/controller/grocery_controller.dart';
+import 'features/grocery_items_listing/data/repositories/grocery_repository_impl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +36,14 @@ Future<void> main() async {
   try {
     await Hive.initFlutter();
     Hive.registerAdapter(RecipeModelAdapter());
-    await Hive.openBox('language');
-    await Hive.openBox<RecipeModel>('recipes');
+    Hive.registerAdapter(GroceryModelAdapter());
+
+    // Open all required boxes
+    await Future.wait([
+      Hive.openBox('language'),
+      Hive.openBox<RecipeModel>('recipes'),
+      Hive.openBox<GroceryModel>('grocery'),
+    ]);
   } catch (e) {
     debugPrint("Error initializing Hive: $e");
   }
@@ -50,12 +64,26 @@ Future<void> main() async {
   final getFetchRecipeUsecase =
       GetFetchRecipeUsecase(fetchRepository: fetchRecipeRepository);
 
+  // Set up dependencies for grocery items
+  final groceryBox = Hive.box<GroceryModel>('grocery');
+
+  final groceryLocalDataSource = GroceryLocalDataSourceImpl(groceryBox);
+  final groceryRepository = GroceryRepositoryImpl(groceryLocalDataSource);
+  final getGroceryUseCase = GetGroceryUsecase(groceryRepository);
+  final addGroceryUseCase = AddGroceryUsecase(groceryRepository);
+  final deleteGroceryUseCase = DeleteGroceryUsecase(groceryRepository);
+  final updateGroceryUsecase = UpdateGroceryUsecase(groceryRepository);
+
   runApp(MyApp(
     getRecipesUseCase: getRecipesUseCase,
     addRecipeUseCase: addRecipeUseCase,
     deleteRecipeUseCase: deleteRecipeUseCase,
     recipeService: localDataSource,
     getFetchRecipeUsecase: getFetchRecipeUsecase,
+    getGroceryUseCase: getGroceryUseCase,
+    addGroceryUseCase: addGroceryUseCase,
+    deleteGroceryUseCase: deleteGroceryUseCase,
+    updateGroceryUsecase: updateGroceryUsecase,
   ));
 }
 
@@ -65,6 +93,10 @@ class MyApp extends StatelessWidget {
   final DeleteRecipe deleteRecipeUseCase;
   final RecipeLocalDataSourceImpl recipeService;
   final GetFetchRecipeUsecase getFetchRecipeUsecase;
+  final GetGroceryUsecase getGroceryUseCase;
+  final AddGroceryUsecase addGroceryUseCase;
+  final DeleteGroceryUsecase deleteGroceryUseCase;
+  final UpdateGroceryUsecase updateGroceryUsecase;
 
   const MyApp({
     Key? key,
@@ -73,6 +105,10 @@ class MyApp extends StatelessWidget {
     required this.deleteRecipeUseCase,
     required this.recipeService,
     required this.getFetchRecipeUsecase,
+    required this.getGroceryUseCase,
+    required this.addGroceryUseCase,
+    required this.deleteGroceryUseCase,
+    required this.updateGroceryUsecase,
   }) : super(key: key);
 
   @override
@@ -104,14 +140,22 @@ class MyApp extends StatelessWidget {
         Get.put(FetchRecipeController(
           getFetchRecipeUsecase: getFetchRecipeUsecase,
         ));
+
+        // Inject GroceryController dependencies
+        Get.put(GroceryController(
+          getGroceryUseCase: getGroceryUseCase,
+          addGroceryUseCase: addGroceryUseCase,
+          deleteGroceryUseCase: deleteGroceryUseCase,
+          updateGroceryUsecase: updateGroceryUsecase,
+        ));
       }),
-      home: SplashScreen(),
+      home: const SplashScreen(),
       routes: {
         '/fetch': (context) => FetchRecipeScreen(),
         '/home': (context) => HomeScreen(),
         '/add': (context) => AddRecipeScreen(),
         '/grocery': (context) => GroceryScreen(),
-        '/bottom': (context) => BottomNavigator(),
+        '/bottom': (context) => const BottomNavigator(),
       },
     );
   }
