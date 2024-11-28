@@ -25,32 +25,32 @@ class DescriptionScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            // Center(
-            //   child: Image.network(
-            //     recipeModel.imageUrl,
-            //     height: 250,
-            //     width: double.infinity,
-            //     errorBuilder: (context, error, stackTrace) => Container(
-            //       height: 250,
-            //       width: 300,
-            //       decoration: BoxDecoration(
-            //         color: Colors.grey,
-            //         borderRadius: BorderRadius.circular(20),
-            //       ),
-            //       child: Container(
-            //         height: 80,
-            //         width: 80,
-            //         decoration: const BoxDecoration(
-            //           color: Colors.white,
-            //           image: DecorationImage(
-            //               image: AssetImage('assets/no_image.png'),
-            //               scale: .5,
-            //               fit: BoxFit.fitHeight),
-            //         ),
-            //       ),
-            //     ), // Display if network fails
-            //   ),
-            // ),
+            Center(
+              child: Image.network(
+                recipeModel.imageUrl,
+                height: 250,
+                width: double.infinity,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 250,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    height: 80,
+                    width: 80,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      image: DecorationImage(
+                          image: AssetImage('assets/no_image.png'),
+                          scale: .5,
+                          fit: BoxFit.fitHeight),
+                    ),
+                  ),
+                ), // Display if network fails
+              ),
+            ),
             const SizedBox(height: 20),
             Center(
               child: Text(
@@ -66,38 +66,38 @@ class DescriptionScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 10),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            //   child: Text(recipeModel.cookingTime,
-            //       style: const TextStyle(
-            //           fontSize: 16, fontWeight: FontWeight.w300)),
-            // ),
-            // const SizedBox(height: 20),
-            // const Padding(
-            //   padding: EdgeInsets.only(left: 20.0),
-            //   child: Text('ingredients',
-            //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            // ),
-            // const SizedBox(height: 7),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            //   child: Text("${recipeModel.ingredients}",
-            //       style: const TextStyle(
-            //           fontSize: 16, fontWeight: FontWeight.w300)),
-            // ),
-            // const SizedBox(height: 30),
-            // const Padding(
-            //   padding: EdgeInsets.only(left: 20.0),
-            //   child: Text('Making',
-            //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            // ),
-            // SizedBox(height: 7),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            //   child: Text("${recipeModel.description}",
-            //       style: const TextStyle(
-            //           fontSize: 16, fontWeight: FontWeight.w300)),
-            // ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(recipeModel.cookingTime,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w300)),
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Text('ingredients',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 7),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(recipeModel.ingredients,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w300)),
+            ),
+            const SizedBox(height: 30),
+            const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Text('Making',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 7),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(recipeModel.description,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w300)),
+            ),
           ],
         ),
       ),
