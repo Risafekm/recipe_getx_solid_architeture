@@ -33,6 +33,7 @@ class RecipeController extends GetxController {
 
   void addRecipe(Recipe recipe) async {
     await addRecipeUseCase.call(recipe);
+
     loadRecipes(); // Reload the list after adding
   }
 

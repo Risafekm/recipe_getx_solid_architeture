@@ -7,5 +7,5 @@ abstract class RecipeRepository {
 
   Future<void> deleteRecipe(String id);
 
-  // Future<void> saveOrder(List<Recipe> recipes);
+  Future<void> saveOrder(List<Recipe> recipes);
 }

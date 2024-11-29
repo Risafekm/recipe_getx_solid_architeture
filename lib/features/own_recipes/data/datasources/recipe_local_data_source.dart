@@ -7,7 +7,7 @@ abstract class RecipeLocalDataSource {
   Future<void> deleteRecipe(String id);
 
   // New method to save the order
-  // Future<void> saveRecipeOrder(List<RecipeModel> orderedRecipes);
+  Future<void> saveRecipeOrder(List<RecipeModel> orderedRecipes);
 }
 
 class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
@@ -30,11 +30,11 @@ class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
     await recipeBox.delete(id);
   }
 
-  // @override
-  // Future<void> saveRecipeOrder(List<RecipeModel> orderedRecipes) async {
-  //   await recipeBox.clear(); // Clear the box before saving the new order
-  //   for (var recipe in orderedRecipes) {
-  //     await recipeBox.put(recipe.id, recipe);
-  //   }
-  // }
+  @override
+  Future<void> saveRecipeOrder(List<RecipeModel> orderedRecipes) async {
+    await recipeBox.clear(); // Clear the box before saving the new order
+    for (var recipe in orderedRecipes) {
+      await recipeBox.put(recipe.id, recipe);
+    }
+  }
 }

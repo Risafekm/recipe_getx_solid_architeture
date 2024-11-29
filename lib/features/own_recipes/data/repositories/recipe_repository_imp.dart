@@ -28,10 +28,10 @@ class RecipeRepositoryImpl implements RecipeRepository {
     await localDataSource.deleteRecipe(id); // Delete from local data source
   }
 
-  // @override
-  // Future<void> saveOrder(List<Recipe> recipes) async {
-  //   final models =
-  //       recipes.map((recipe) => RecipeModel.fromEntity(recipe)).toList();
-  //   await localDataSource.saveRecipeOrder(models);
-  // }
+  @override
+  Future<void> saveOrder(List<Recipe> recipes) async {
+    final models =
+        recipes.map((recipe) => RecipeModel.fromEntity(recipe)).toList();
+    await localDataSource.saveRecipeOrder(models);
+  }
 }

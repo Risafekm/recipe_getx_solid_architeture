@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
             final movedRecipe = recipeController.recipes.removeAt(oldIndex);
             recipeController.recipes.insert(newIndex, movedRecipe);
 
-            recipeController
+            await recipeController
                 .saveRecipesToHive(); // Save the new order after reordering
           },
           itemBuilder: (context, index) {
@@ -80,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  recipeController.deleteRecipe(recipe.title);
+                  recipeController.deleteRecipe(recipe.id);
                   Get.snackbar(
                     'Deleted',
                     '${recipe.title} has been removed from the list',
